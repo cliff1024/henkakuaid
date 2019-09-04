@@ -8,6 +8,7 @@ var
   HTTPClient: TFPHTTPClient;
   RawData: string;
   EndURL : string;
+  emsg: string;
 begin
   try
     HTTPClient := TFPHTTPClient.Create(nil);
@@ -19,12 +20,14 @@ begin
           begin
             result := IPRegex.Match[1];
           end else begin
-            result := 'Got invalid results getting data. Details:' + LineEnding + RawData;
+            emsg := 'Got invalid results getting data. Details:' + LineEnding + RawData;
+			raise Exception.Create(emsg);
           end;
     except
       on E: Exception do
       begin
-        result := 'Error retrieving data: ' + E.Message;
+        emsg := 'Error retrieving data: ' + E.Message;
+		raise Exception.Create(emsg);
       end;
     end;
   finally
@@ -34,10 +37,10 @@ end;
 
 procedure usage;
 begin
-  WriteLn('Usage: ' + ParamStr(0) + ' aid');
-  WriteLn('       aid: The AID number');
-  WriteLn('');
-  WriteLn('Example: ' + ParamStr(0) + ' 1111111111111111');
+  WriteLn(stderr, 'Usage: ' + ParamStr(0) + ' aid');
+  WriteLn(stderr, '       aid: The AID number');
+  WriteLn(stderr, '');
+  WriteLn(stderr, 'Example: ' + ParamStr(0) + ' 1111111111111111');
 end;
 
 var
@@ -51,10 +54,17 @@ begin
   AID := ParamStr(1);
   // TODO : Validar AID
   try
-    IPRegex := TRegExpr.Create;
-    IPRegex.Expression := RegExprString('<b>[^<^]*</b>: ([1234567890abcdef]*)');
-    // TODO : Externalizar URL a un fichero de config o leer de parametro
-    WriteLn(getNumber('http://cma.henkaku.xyz/', AID, IPRegex));
+    try
+      IPRegex := TRegExpr.Create;
+      IPRegex.Expression := RegExprString('<b>[^<^]*</b>: ([1234567890abcdef]*)');
+      // TODO : Externalizar URL a un fichero de config o leer de parametro
+      WriteLn(getNumber('http://cma.henkaku.xyz/', AID, IPRegex));
+    except
+      on E: Exception do begin
+        WriteLn(E.Message);
+        halt(-1); // %ERRORLEVEL%
+	  end;
+	end;
   finally
     IPRegex.Free;
   end;
