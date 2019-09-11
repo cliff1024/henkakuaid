@@ -6,7 +6,7 @@ uses
 const
   THIS : string = '.';
   PARENT : string = '..';
-  EXENAME : string = 'psvimg-create.exe.bat';
+  EXENAME : string = 'psvimg-create.exe';
 
 function getQCMAAppsPath() : string;
 var
