@@ -23,7 +23,8 @@ psvimg-create.exe -n savedata -K 527e0200d0a80134d56f8ac24d5a0d742e2eb325e7bd69b
 [...]
 xcopy /E /Y /I PCSG90096 C:\Users\xxxxxxxxxxx\Documents\PS Vita\APP\1111111111111111\PCSG90096
 PCSG90096\Nuevo documento de texto.txt
-1 archivo(s) copiado(s)```
+1 archivo(s) copiado(s)
+```
 
 ## Build
 
